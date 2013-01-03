@@ -1,0 +1,3 @@
+POLLUTANT		AVERAGE NIJ
+NITRATE		7.0
+------------------------------
