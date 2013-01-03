@@ -1,0 +1,71 @@
+MetCor Engine Implementation v.0.4.
+IMPLEMENTATION NOTES
+
+
+***NOTE***
+the convergence criteria for RTWC is:
+asd
+***NOTE***
+
+
+***SOLUTION***
+thirdDim = "h,xR,yR,T"
+***SOLUTION***
+
+
+
+****POTENTIAL ISSUE WITH THIRDDIM AND RTWC****
+The ThirdDim variable is not used in the calculation of cwt OR rtwc matrices, this is largely excluded. however, the NIJM is calculated from "uniqueID" hashsets which include the receptor site coordinates from the ThirdDim (in the case of HYSPLIT) or the elevation (in the case of CMC-EPs). 
+
+This WILL create an inconsistency IF:
+(1) different CMC-EP elevations are used in calculations
+(2) HYSPLIT trajectories with DIFFERENT RECEPTOR COORDINATES are being used in calculations.
+
+This MAY create a semantic inconsistency IF:
+(1) HYSPLIT trajectories with DIFFERENT ELEVATIONS are being used (elevation data is not taken into account anymore)
+
+*is the elevation data from HYSPLIT needed? => 
+
+****POTENTIAL ISSUE WITH THIRDDIM AND RTWC****
+
+
+
+****CODING STANDARD: thirdDim variable for QTBA****
+IMPORTANT: QTBA can only be run for hysplit
+thirdDim = "xR,yR,T" from CMCRender.readHSEP(...); NOTE: T must be appended to the String ArrayList at the time
+of block 6 acquisition.
+thirdDim can also contain a different format if CMC files are used.
+Grid: uniqueID() now hashes: sourceID,lastComma(thirdDim); 
+****CODING STANDARD: thirdDim variable for QTBA****
+
+
+
+
+****PROBLEM: SMOOTHING****
+DESCRIPTION: CWT-values are nullified with a no-data value "ndValue" if they are below the smoothing threshold (based on the savitsky-golay filter); this creates an intrinsic problem when repeatedly recalculating CWT-values in RTWC: 
+	1st iteration(i,j):	entire grid has no data:	CWT[i][j] = null
+						meaningful data for all x:	CWT[i][j][all x] != null
+	
+	smoothing of field:	entire grid has no data:	CWT[i][j] = null, no data
+						meaningful data for some x:	CWT[i][j][some x] != null, CWT[i][j][some x] != ndValue
+						nullified data for some x:	CWT[i][j][some x] != null, CWT[i][j][some x] == ndValue
+	
+	2nd iteration(i,j): entire grid has no data:	CWT[i][j] = null
+						meaningful data for some x: -> recalculation of the CWT(i,j,x) should include this!
+						nullified data for some x: -> recalculation of the CWT(i,j,x) should leave this out
+
+SOLUTION:	included a requirement that the ndValue must be LESS THAN 0. 
+			Modified: 	Grid.getCalcCWT(...), Grid.getCalcCWTLog(...), World.smoothCWTField(...); the calculation
+						now allows CWT[i][j][x] values which were previously nullified to be unchanged and unused
+						in subsequent calculations.
+						
+RESULT:		Repeated calculations of CWT can be made with World.smoothCWTField(...)
+
+****END PROBLEM: SMOOTHING****
+
+
+						
+
+
+
+	
