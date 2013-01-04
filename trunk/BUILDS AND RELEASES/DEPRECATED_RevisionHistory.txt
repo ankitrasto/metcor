@@ -1,0 +1,14 @@
+****THIS DOCUMENT IS DEPRECATED****
+
+Revision 0.4 Notes:
+- fixed elevation wrong column problem
+- sourceID was not used in weighting when the thresholds were defined: this was a bug in dnimp but fixed afterwards
+
+Revision 0.5 Notes:
+- used different definition of sourceID in dnimp: the sourceID is unique if the elevation AND identifier are different; the "thirdDim" variable is manifested as the element; widespread changes in dnimp:
+- POINT.java: added new "thirdDim" variable with accessor; new constructor for this as well
+- GRID.java: new algorithm for calculating taggedUniqueID()
+- CMCRENDER.java: assigned back trajectory elevations to thirdDim variables in readEP(), readHSEP()
+
+
+
