@@ -104,6 +104,12 @@
  	 *Contains the set of all unique/sourceIDs used for RTWC analysis
  	 */
  	 private HashSet<String> worldIds;
+ 	 
+ 	 /**
+ 	  *Contains all of the receptor sites in this world as a HashSet of Strings.
+ 	  *Important for calculating grid dependent multisite calculations. Format: "xR,yR"
+ 	  */
+ 	  private HashSet<String> worldRecs;
  	
  	//this will be constructor for GUI interface!
  	/**
@@ -156,8 +162,9 @@
  		
  		//initialize the sourceID arrays:
  		worldIds = new HashSet<String>();
+ 		worldRecs = new HashSet<String>();
+ 		
  	}
- 	
  	
  	private String lastComma(String aux){
  		try{
@@ -165,6 +172,10 @@
  		}catch(Exception e){
  			return aux;
  		}
+ 	}
+ 	
+ 	private String receptorSite(String aux){
+ 		return (aux.split(",")[1] + "," + aux.split(",")[2]);
  	}
  	
  	/**
@@ -176,6 +187,7 @@
  		if(this.totalLat > 90 && (x.lon() >= 0 && x.lon() < this.totalLon)){
  			
  			worldIds.add(x.sourceID() + this.lastComma(x.thirdDim()));
+ 			worldRecs.add(receptorSite(x.thirdDim()));
  			
  			if(x.lat() < 0 && x.lat() >= (90-this.totalLat)){
  				int auxI = (int)(x.lon()/lonDX);
@@ -193,6 +205,7 @@
  		}else{
  			
  			worldIds.add(x.sourceID() + this.lastComma(x.thirdDim()));
+ 			worldRecs.add(receptorSite(x.thirdDim()));
  			
 	 		if((x.lon() >= 0 && x.lon() < this.totalLon) && (x.lat() >= 0 && x.lat() < this.totalLat)){
 	 			int auxI = (int)(x.lon()/lonDX);
@@ -664,7 +677,7 @@
  	 				QTBA[i][j] = new double[varList.length];
  	 				for(int k = 0; k < varList.length; k++){
  	 					try{
- 	 						QTBA[i][j][k] = nHem[i][j].getQTBA(varList[k], a, k);
+ 	 						QTBA[i][j][k] = nHem[i][j].getQTBA(varList[k], a, k, this.worldRecs.size());
  	 					}catch(Exception e){
  	 						e.printStackTrace();
  	 						QTBA[i][j][k] = 0;

@@ -448,7 +448,7 @@
   	/**
   	 *
   	 */
-  	public double getQTBA(String polName, double a, int polIndex) throws Exception{
+  	public double getQTBA(String polName, double a, int polIndex, int worldRecCount) throws Exception{
   		//Receptor endpoints are NOT counted in the QTBA calculations!
   		
   		if(this.taggedUniqueID() <= 0) return -1;
@@ -500,17 +500,29 @@
 			double counts = 0;
 			double sum = 0;
 			double sumT = 0;
+			
 			for(int i = 0; i < gridQTBAs.length; i++){
-				if(gridQTBAs[i] > 0){
+				if(gridQTBAs[i] >= 0){
 					sum += gridQTBAs[i];
 					sumT += gridNatTs[i];
-					counts++;
 				}
+				counts++;
 			}
+			
 			if(counts == 0) return -1;
-			this.gridNatT[polIndex] = (sumT/counts);
-			return (sum/counts);
+			
+			if(gridQTBAs.length == 1 && worldRecCount == 1){
+				this.gridNatT[polIndex] = gridNatTs[0];
+				return gridQTBAs[0];
+			}
+			
+			if(worldRecCount > 1 && gridQTBAs.length > 1){
+				this.gridNatT[polIndex] = (sumT/counts);
+				return (sum/counts);
+			}
 		}
+		
+		return -1;
   	}
   	
   	public double getGridNatT(int polIndex){
