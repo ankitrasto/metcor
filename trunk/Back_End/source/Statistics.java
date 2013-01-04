@@ -4,6 +4,23 @@
  *Started: August 22, 2012
  **/
  
+ /*
+ * Copyright [2013] [Ankit Rastogi]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+ 
+ 
  package dnimp;
  
  import java.text.*;
@@ -15,7 +32,11 @@
   *A statistics module for the MetCor implementation of different
   *trajectory statistics models. Functions include returning varying t-values,
   *signal smoothing and matrix to vector (+ vice versa) transformations. To be used
-  *by CMCRender, World and Grid classes of the dnimp package.
+  *by CMCRender, World and Grid classes of the dnimp package. 
+  *
+  *The SG-filter implementation was developed by Marcin Rzeznicki and is taken
+  *verbatim from http://code.google.com/p/savitzky-golay-filter/.
+  *
   *@author Ankit Rastogi 
   *
   */
