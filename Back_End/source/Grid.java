@@ -489,7 +489,12 @@
 	  			}
 	  		}
 	  		
-	  		gridQTBAs[r] = (concWeightedQTBA/bareGridQTBA);
+	  		if(bareGridQTBA == 0){
+	  			gridQTBAs[r] = -1;
+	  		}else{
+	  			gridQTBAs[r] = (concWeightedQTBA/bareGridQTBA);
+	  		}
+	  	
 	  		gridNatTs[r] = bareGridQTBA;
 		}
 		
@@ -513,11 +518,13 @@
 			
 			if(gridQTBAs.length == 1 && worldRecCount == 1){
 				this.gridNatT[polIndex] = gridNatTs[0];
+				if(gridNatT[polIndex] == 0) return -1;
 				return gridQTBAs[0];
 			}
 			
 			if(worldRecCount > 1 && gridQTBAs.length > 1){
 				this.gridNatT[polIndex] = (sumT/counts);
+				if(gridNatT[polIndex] == 0) return -1;
 				return (sum/counts);
 			}
 		}

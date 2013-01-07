@@ -211,7 +211,6 @@
  		double v = statTest.haversineV(45.434,-75.676, 45.434, -75.676);
  		System.out.println("\n v = " + v);
  		System.out.println(statTest.naturalTransPot(0, v, 5.4));
- 		System.out.println(1-Erf.erf(2.942100531));
  		
  		
  		/*double[][] x = new double[10][];
