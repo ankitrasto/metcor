@@ -706,7 +706,7 @@
  	 		
  	 		for(int i = 0; i < nHem.length; i++){
  	 			for(int j = 0; j < nHem[i].length; j++){
- 	 				if(nHem[i][j].taggedPop() > 0 && nHem[i][j].getGridNatT(k) > 0){
+ 	 				if(nHem[i][j].taggedPop() > 0){
  	 					sumQTBAk += nHem[i][j].getGridNatT(k);
  	 					noTagged++;
  	 				}		

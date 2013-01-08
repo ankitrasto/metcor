@@ -490,7 +490,7 @@
 	  		}
 	  		
 	  		if(bareGridQTBA == 0){
-	  			gridQTBAs[r] = -1;
+	  			gridQTBAs[r] = 0;
 	  		}else{
 	  			gridQTBAs[r] = (concWeightedQTBA/bareGridQTBA);
 	  		}
@@ -510,21 +510,20 @@
 				if(gridQTBAs[i] >= 0){
 					sum += gridQTBAs[i];
 					sumT += gridNatTs[i];
+					counts++;
 				}
-				counts++;
 			}
 			
 			if(counts == 0) return -1;
 			
 			if(gridQTBAs.length == 1 && worldRecCount == 1){
 				this.gridNatT[polIndex] = gridNatTs[0];
-				if(gridNatT[polIndex] == 0) return -1;
+				if(gridNatT[polIndex] == 0) return 0;
 				return gridQTBAs[0];
 			}
 			
 			if(worldRecCount > 1 && gridQTBAs.length > 1){
 				this.gridNatT[polIndex] = (sumT/counts);
-				if(gridNatT[polIndex] == 0) return -1;
 				return (sum/counts);
 			}
 		}
