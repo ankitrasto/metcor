@@ -52,4 +52,5 @@ public class AdvancedTriplet{
 		this.high = high;
 		this.weight = weight;
 	}
+	
 }
