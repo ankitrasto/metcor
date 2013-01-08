@@ -475,7 +475,7 @@
 	  				if(auxThirdDim[1].equalsIgnoreCase(receptor.split(",")[0]) && auxThirdDim[2].equalsIgnoreCase(receptor.split(",")[1])){				
 		  				double v = statPackage.haversineV(auxP.lat(), auxP.lon()-360, Double.parseDouble(auxThirdDim[1]), Double.parseDouble(auxThirdDim[2]));
 		  				
-		  				if(Math.abs(v) >= 1E-9 || Math.abs(Double.parseDouble(auxThirdDim[3])) > 0.001){ //explicitly exclude receptor !
+		  				if(Math.abs(v) >= 1E-9 && Math.abs(Double.parseDouble(auxThirdDim[3])) > 0.001){ //explicitly exclude receptor !
 		  					double natTxy = statPackage.naturalTransPot(Math.abs(Double.parseDouble(auxThirdDim[3])), v, a);
 		  					bareGridQTBA += natTxy;
 		  					concWeightedQTBA += (natTxy*auxP.getValue(polName));
