@@ -742,7 +742,7 @@ public class CMCRender {
      */	
     public void calcRTWC(int optionSelect, double convPercent, int maxIterations, int pointFilter, int polyDegree, double confInt, int ndValue, AdvancedTriplet[] weights) throws Exception{
     	if(varList == null) return; //aka the CD-file has not been read yet
-    	nh.calcRTWC(this.varList, optionSelect, convPercent, maxIterations, pointFilter, polyDegree, confInt, ndValue);
+    	nh.calcRTWC(this.varList, optionSelect, convPercent, maxIterations, pointFilter, polyDegree, confInt, ndValue, this.outputDir);
     	
     	if(weights != null){
     		nh.applyAdvancedWeight("RTWC", weights);
