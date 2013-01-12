@@ -25,6 +25,7 @@
  package dnimp;
  import java.text.*;
  import java.util.*;
+ import java.io.*;
  
 /**
  * A representation of all or part of the Northern Hemisphere, segmented into grids with a specified dimension. 
@@ -533,9 +534,10 @@
      *@param polyDegree a user-defined parameter which specifies the degree of the polynomial to use smoothing with
      *@param confInt the confidence interval (1-probability) of the desired analysis in decimal format (0.95, 0.999, etc.)
      */	
- 	public void calcRTWC(String[] varList, int optionSelect, double convPercent, int maxIterations, int pointFilter, int polyDegree, double confInt, int ndValue) throws Exception{
+ 	public void calcRTWC(String[] varList, int optionSelect, double convPercent, int maxIterations, int pointFilter, int polyDegree, double confInt, int ndValue, File outputDir) throws Exception{
     	double PDiff[] = new double[varList.length];
     	boolean alreadyConverged[] = new boolean[varList.length];
+    	
     	for(int i = 0; i < PDiff.length; i++){
     		PDiff[i] = -1;
     		alreadyConverged[i] = false;
@@ -574,10 +576,29 @@
     			PDiff = percentDiff(varList, ndValue);
     			
     			for(int k = 0; k < PDiff.length; k++){
-    				System.out.println("PDiff(" + varList[k] + ") = " + PDiff[k]); //VERBOSE TESTING
+    				
+    				if(alreadyConverged[k]){
+    					System.out.println("Pollutant: " + varList[k] + " has converged");
+    				}else{
+    					System.out.println("PDiff(" + varList[k] + ") = " + PDiff[k]); //VERBOSE TESTING
+    				}
+    								
     				if(PDiff[k] <= convPercent && PDiff[k] >= 0){
     					if(!alreadyConverged[k]){
     						this.finalizeCWT(k, varList);
+    						
+    						//at this point, the final RTWC matrix for the pollutant should be printed to disk.
+    						File outputMatrix = new File(outputDir + "/CONVERGED_RTWC/" + varList[k] + ".txt");
+    						if(!new File(outputMatrix.getParent()).exists()){
+    							new File(outputMatrix.getParent()).mkdir();
+    						}
+    						
+    						PrintWriter pW = new PrintWriter(new BufferedWriter(new FileWriter(outputMatrix.getAbsoluteFile() ,false)));
+    						ArrayList<String> outText = this.getFinalCWTMatrix(k, ndValue);
+    						for(int i = 0; i < outText.size(); i++) pW.println((String)(outText.get(i)));
+    						pW.close();
+    						//end temporary file write procedure
+    						
     						alreadyConverged[k] = true;
     					}
     				}
@@ -586,7 +607,7 @@
     			//iterate through the "already converged" variables to decide to stop
     			if(iterations >= maxIterations){
     				for(int k = 0; k < varList.length; k++){
-    					this.finalizeCWT(k, varList);
+    					if(!alreadyConverged[k]) this.finalizeCWT(k, varList);
     				}	
     				converged = true;
     			}else{
@@ -644,7 +665,7 @@
  		for(int i = 0; i < nHem.length; i++){
 			for(int j = 0; j < nHem[i].length; j++){
 				if(CWT[i][j] != null){
-					finalCWT[i][j] = new double[varList.length];
+					if(finalCWT[i][j] == null) finalCWT[i][j] = new double[varList.length];
 					finalCWT[i][j][polIndex] = CWT[i][j][polIndex];
 				}
 			}
