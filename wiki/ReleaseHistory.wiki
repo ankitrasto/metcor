@@ -3,6 +3,9 @@
 
 This page is an archive of informal release notes for every Jar-file of the back-end and GUI that has been released, starting from Rev. 15.
 
+*[http://code.google.com/p/metcor/downloads/detail?name=MetCor_r18v1.zip Rev. 18, Version 1.0]*
+ * minor semantic RTWC fix: {{{World.percentDiff(...)}}} has been changed to the correct definition of percent convergence. Previous builds added before Revision 16 should not be used for RTWC calculations where convergence criteria are specified.
+
 *[http://code.google.com/p/metcor/downloads/detail?name=MetCor_r15v1.zip Rev. 15, Version 1.0] - deprecated for RTWC-convergence criteria calculations*
  * matrices for RTWC-based calculations with convergence criteria are printed out during the calculation period if they have at least met the user-defined convergence criteria. For debugging purposes, they are also redundantly printed out at the end
  * minor technical RTWC fix - previous revisions should not be used for RTWC-calculations with convergence criteria
