@@ -633,28 +633,28 @@
  		
  		for(int k = 0; k < varList.length; k++){
 			
-			double avgSumNew = 0; double avgSumNewCounter = 0;
-			double avgSumOld = 0; double avgSumOldCounter = 0;
+			/*Percent difference is calculated as the average 
+			 *percent differences of all grid cells.
+			 **/
+			
+			double counter = 0;
+			double gridDifferenceSum = 0;
 			
 			for(int i = 0; i < nHem.length; i++){
  				for(int j = 0; j < nHem[i].length; j++){
- 					if(CWT[i][j] != null && CWT[i][j][k] > 0){
- 						avgSumNew += CWT[i][j][k];
- 						avgSumNewCounter++;
- 					}
- 					
- 					if(oldCWT[i][j] != null && oldCWT[i][j][k] > 0){
- 						avgSumOld += oldCWT[i][j][k];
- 						avgSumOldCounter++;
+ 					if(CWT[i][j] != null && CWT[i][j][k] > 0 && oldCWT[i][j] != null && oldCWT[i][j][k] > 0){
+ 						gridDifferenceSum += ((CWT[i][j][k]-oldCWT[i][j][k])*100/oldCWT[i][j][k]);
+ 						counter++;
  					}
  				}
 			}
 			
-			double newAvg = avgSumNew/avgSumNewCounter;
-			double oldAvg = avgSumOld/avgSumOldCounter;
-			//System.out.println("\tNewAvg,OldAvg = " + newAvg + "," + oldAvg); //VERBOSE TESTING
+			if(counter <= 0){
+				PD[k] = 0;
+			}else{
+				PD[k] = Math.abs(gridDifferenceSum/counter);
+			}
 			
-			PD[k] = Math.abs((newAvg - oldAvg)*100/(oldAvg));
 			//alternative: PD[k] = Math.abs(((avgSumNew/avgSumNewCounter)/(avgSumOld/avgSumOldCounter) - 1))*100;
  		}
  		
