@@ -421,7 +421,7 @@
   		for(int i = 0; i < points.size(); i++){
   			if(((Point)points.get(i)).hasData() && ((Point)points.get(i)).sourceID() != null && ((Point)points.get(i)).thirdDim() != null){
   				if((((Point)points.get(i)).sourceID() + this.lastComma(((Point)points.get(i)).thirdDim())).equalsIgnoreCase(auxUID)){
-  					double existingConc = ((Point)points.get(i)).getValue(polName);
+  					double existingConc = ((Point)points.get(i)).getOriginalValue(auxIndex);
   					//System.out.println(auxUID + "," + (((Point)points.get(i))).lat() + "," + ((((Point)points.get(i))).lon()-360) + "," + existingConc + "," + multiple); //VERBOSE TESTING 
   					((Point)points.get(i)).setNewConc(auxIndex, multiple*existingConc);
   					//((Point)points.get(i)).printInfo(); //VERBOSE TESTING

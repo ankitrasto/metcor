@@ -62,6 +62,14 @@ import java.text.*;
  	 */
  	private Pair values[];
  	
+ 	/**
+ 	 *1-D set of original pollutants assigned to this grid. For memory optimization
+ 	 *the use of this array is only for RTWC/concentration redistribution methods 
+ 	 *and folows the same index as the Pair[] values;
+ 	 */
+ 	private double originalConc[];
+ 	
+ 	private boolean firstTime = true;
  	
  	/**
  	 *length mismatch exception: The size of the input data is either inadmissable or does not match the required size.
@@ -148,6 +156,13 @@ import java.text.*;
  	  	}
  	  	throw notFoundException;
  	  }
+ 	  
+ 	  public double getOriginalValue(int index) throws Exception{
+ 	  	if(this.originalConc == null || index < 0 || index >= this.originalConc.length){
+ 	  		throw notFoundException;
+ 	  	}
+ 	  	return this.originalConc[index];
+ 	  }
  	   	  
  	  /**
  	   *adds an initial set of correlated data to this point. If there was correlated data before,
@@ -161,10 +176,16 @@ import java.text.*;
  	  		throw this.lengthMismatchException;
  	  	}else{
  	  		this.values = new Pair[auxPair.length];
+ 	  		if(this.firstTime){
+ 	  			this.originalConc = new double[auxPair.length];
+ 	  		}
  	  		for(int i = 0; i < values.length; i++){
  	  			values[i] = new Pair(auxPair[i].name, auxPair[i].value);
+ 	  			if(this.firstTime) originalConc[i] = auxPair[i].value;
  	  			values[i].threshold = auxPair[i].threshold;
  	  		}
+ 	  		
+ 	  		firstTime = false;
  	  	}
  	  }
  	  
