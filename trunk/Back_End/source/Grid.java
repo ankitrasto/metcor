@@ -522,12 +522,18 @@
 				return gridQTBAs[0];
 			}
 			
+			if(worldRecCount > 1 && gridQTBAs.length == 1){
+				this.gridNatT[polIndex] = -1;
+				return -1;
+			}
+			
 			if(worldRecCount > 1 && gridQTBAs.length > 1){
 				this.gridNatT[polIndex] = (sumT/counts);
 				return (sum/counts);
 			}
 		}
 		
+		this.gridNatT[polIndex] = -1;
 		return -1;
   	}
   	
