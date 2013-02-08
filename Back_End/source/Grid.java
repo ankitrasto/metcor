@@ -249,7 +249,7 @@
   		return auxTable;
   	}
   	
-  	private int countNIJM(String auxUID){
+  	public int countNIJM(String auxUID){
   		int auxNIJM = 0;
   		for(int i = 0; i < points.size(); i++){	
   			if(((Point)points.get(i)).hasData() && ((Point)points.get(i)).sourceID() != null && ((Point)points.get(i)).thirdDim() != null){

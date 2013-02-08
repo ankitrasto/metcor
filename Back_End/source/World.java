@@ -499,8 +499,8 @@
  					}
  					
  					if(CWT[i][j][polIndex] != ndValue){
- 						CWTAvgSUM += CWT[i][j][polIndex];
- 						counter++;
+ 						CWTAvgSUM += CWT[i][j][polIndex]*nHem[i][j].countNIJM(auxSourceID);
+ 						counter += nHem[i][j].countNIJM(auxSourceID);
  					}
  				}
  			}
