@@ -371,7 +371,7 @@ public class CMCRender {
     	}
 
     	System.out.print("...done. Population of Points in World: " + nh.hemPopulation() + "\n"); //VERBOSE TESTING
-    	System.out.print("MAX NIJ in World: " + nh.getMaxNIJ());
+    	System.out.print("MAX NIJ in World: " + nh.getMaxNIJ()+"\n");
     }
 
 
