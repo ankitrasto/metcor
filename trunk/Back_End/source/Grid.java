@@ -500,6 +500,7 @@
 		
 		//now, process and return the multiple QTBAs!
 		if(gridQTBAs.length == 0){
+			this.gridNatT[polIndex] = -1;
 			return -1;
 		}else{
 			double counts = 0;
@@ -514,7 +515,10 @@
 				}
 			}
 			
-			if(counts == 0) return -1;
+			if(counts == 0){
+				this.gridNatT[polIndex] = -1;
+				return -1;
+			}
 			
 			if(gridQTBAs.length == 1 && worldRecCount == 1){
 				this.gridNatT[polIndex] = gridNatTs[0];
