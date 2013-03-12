@@ -691,14 +691,14 @@
  	 *@param varList an array of correlated data variable names, from the correlated data file 
  	 *@param a the atmospheric dispersion velocity (see the MetCor implementation note on QTBA); provide value in km/hr.
  	 */
- 	 public void calcQTBA(String varList[], double a){
+ 	 public void calcQTBA(String varList[], double a, int maxReceptor){
  	 	for(int i = 0; i < nHem.length; i++){
  	 		for(int j = 0; j < nHem[i].length; j++){
  	 			if(nHem[i][j].taggedPop() > 0){
  	 				QTBA[i][j] = new double[varList.length];
  	 				for(int k = 0; k < varList.length; k++){
  	 					try{
- 	 						QTBA[i][j][k] = nHem[i][j].getQTBA(varList[k], a, k, this.worldRecs.size());
+ 	 						QTBA[i][j][k] = nHem[i][j].getQTBA(varList[k], a, k, this.worldRecs.size(), maxReceptor);
  	 					}catch(Exception e){
  	 						e.printStackTrace();
  	 						QTBA[i][j][k] = 0;

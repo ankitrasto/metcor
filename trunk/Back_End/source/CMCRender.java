@@ -85,7 +85,18 @@ public class CMCRender {
 	 *Describes whether the correlated data input file contains pre-defined thresholds.
 	 */
 	private boolean containsThresh = false;
-
+	
+	/**
+	 *Describes whether the correlated data input file contains a pre-defined multisite receptor threshold
+	 */
+	 private boolean containsReceptorMax = false;
+	 
+	/**
+	*The minimum number of receptor sites to average (multisite calculations) acquired from the RECEPTORMAX line;
+	*default is 2.
+	*/
+	private int receptorMax = 2;
+	
 	/**
 	 *Contains a dynamic array of correlated data used to calculate thresholds in CMCRender, if applicable.
 	 */
@@ -409,6 +420,8 @@ public class CMCRender {
     		concSet = new ArrayList<ArrayList<Double>>(this.varList.length);
     		for(int m = 0; m < this.varList.length; m++) concSet.add(new ArrayList<Double>());
     	}
+    	
+    	
     	for(int i = 6; i < lineHold.length; i++) varList[i-6] = lineHold[i];
     	dataHold = bR.readLine();
     	int j = 0;
@@ -420,6 +433,12 @@ public class CMCRender {
     		if(lineHold[0].equalsIgnoreCase("THRESH")){
     			for(int i = 0; i < threshData.length; i++){
     				this.threshData[i] = new Pair(varList[i], Double.parseDouble(lineHold[1+i]));
+    			}
+    		}else if(lineHold[0].equalsIgnoreCase("RECEPTORMAX")){
+    			try{
+    				this.receptorMax = Integer.parseInt(lineHold[1]);
+    			}catch(Exception e){
+    				System.out.println("Error getting ReceptorMAX Line ... ensure proper formatting");
     			}
     		}else{
     			startDate = lineHold[0] + (lineHold[1].substring(0,2));
@@ -471,8 +490,13 @@ public class CMCRender {
     			numLines++;
     			lineHold = delimitLine(dataHold.trim()).split("\t"); //redundant but ok.
     			if(lineHold[0].equalsIgnoreCase("THRESH") && (lineHold.length != (headerLength-5))){bR.close(); return 0;}
-    			if(!lineHold[0].equalsIgnoreCase("THRESH") && (lineHold.length != headerLength)){bR.close(); System.out.println("Missing Data: Line = " + numLines + ", Length: " + lineHold.length + ", Header = " + headerLength); return 0;}
+    			if(!lineHold[0].equalsIgnoreCase("THRESH") && !lineHold[0].equalsIgnoreCase("RECEPTORMAX") && (lineHold.length != headerLength)){bR.close(); System.out.println("Missing Data: Line = " + numLines + ", Length: " + lineHold.length + ", Header = " + headerLength); return 0;}
     			if(lineHold[0].equalsIgnoreCase("THRESH") && (lineHold.length == (headerLength-5))){this.containsThresh = true;}
+    			
+    			if(lineHold[0].equalsIgnoreCase("RECEPTORMAX") && (lineHold.length == 2)){
+    				this.containsReceptorMax = true;
+    				System.out.println("\nReceptorMax Line Found, Value = " + lineHold[1]);
+    			}
     			dataHold = bR.readLine();
     		}
     	}else{
@@ -758,7 +782,8 @@ public class CMCRender {
      */
      public void calcQTBA(double a, AdvancedTriplet[] weights){
      	if(varList == null) return; //aka the CD-file has not been read yet
-     	nh.calcQTBA(this.varList, a);
+     //	System.out.println("ReceptorMax = " + this.receptorMax); VERBOSE
+     	nh.calcQTBA(this.varList, a, this.receptorMax);
      	
      	//nh.printQTBAMatrix(0);
      	

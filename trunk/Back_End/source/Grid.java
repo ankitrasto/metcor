@@ -448,7 +448,7 @@
   	/**
   	 *
   	 */
-  	public double getQTBA(String polName, double a, int polIndex, int worldRecCount) throws Exception{
+  	public double getQTBA(String polName, double a, int polIndex, int worldRecCount, int maxRec) throws Exception{
   		//Receptor endpoints are NOT counted in the QTBA calculations!
   		
   		if(this.taggedUniqueID() <= 0) return -1;
@@ -520,18 +520,18 @@
 				return -1;
 			}
 			
-			if(gridQTBAs.length == 1 && worldRecCount == 1){
+			if(gridQTBAs.length == 1 && worldRecCount == 1){ //single site case.
 				this.gridNatT[polIndex] = gridNatTs[0];
 				if(gridNatT[polIndex] == 0) return 0;
 				return gridQTBAs[0];
 			}
 			
-			if(worldRecCount > 1 && gridQTBAs.length == 1){
+			if(worldRecCount > 1 && gridQTBAs.length == 1){ //multiple site case.
 				this.gridNatT[polIndex] = -1;
 				return -1;
 			}
 			
-			if(worldRecCount > 1 && gridQTBAs.length > 1){
+			if(worldRecCount > 1 && gridQTBAs.length >= maxRec){ //multiple site case.
 				this.gridNatT[polIndex] = (sumT/counts);
 				return (sum/counts);
 			}
