@@ -3,6 +3,14 @@
 
 This page is an archive of informal release notes for every Jar-file of the back-end and GUI that has been released, starting from Rev. 15.
 
+*[http://code.google.com/p/metcor/downloads/detail?name=MetCor_r21v1.zip Rev. 21, Version 1.0] - DEPRECATED FOR QTBA analysis*
+ * semantic change in redistributed concentrations method for averaging CWT specifically, which uses a weighted average formula instead of a simple averaging formula(see SVN-diff for more details):
+<img src="http://latex.codecogs.com/gif.latex?CWT_{\rm AVG}(m) = \frac{1}{\sum_{\forall i,j}{N_{ijm}}}\sum_{\forall i,j}N_{ijm}CWT(i,j)_{m}%.png"/>
+ * download [http://code.google.com/p/metcor/downloads/detail?name=MetCor_r18v1.zip Rev. 18, Version 1.0] for the previous version, which uses:
+<img src="http://latex.codecogs.com/gif.latex?CWT_{\rm AVG}(x) = \frac{1}{N_{grids}}\sum_{\forall i,j}CWT(i,j)_{x}%.png"/>
+
+where x,m are endpoint identifiers (i.e. back trajectory originating dates/"source IDs"). *all future versions will use the revised CWT averaging scheme unless explicitly specified*
+
 *[http://code.google.com/p/metcor/downloads/detail?name=MetCor_r18v1.zip Rev. 18, Version 1.0]*
  * minor semantic change in redistributed concentrations method; the wrong method of redistributing concentrations was made before (see SVN-diff for more details).
  * *previous revisions should be considered deprecated for ALL RTWC methods*
