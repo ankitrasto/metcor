@@ -111,6 +111,13 @@
  	  *Important for calculating grid dependent multisite calculations. Format: "xR,yR"
  	  */
  	  private HashSet<String> worldRecs;
+ 	  
+ 	  /**
+ 	   *Grid Metrics arrays containing information about average Nat-T and average taggedNIJs
+ 	   *used for weighting with fractional weights.
+ 	   */
+ 	  private double[] avgNatT;
+ 	  private double[] avgTaggedNIJ;
  	
  	//this will be constructor for GUI interface!
  	/**
@@ -276,12 +283,15 @@
  	/**
  	 *Returns the weight for CWT/QTBA/RTWC weighting functions; if no weight is found or specified,
  	 *a default weight of 1 is returned
+ 	 *REQUIRES: CMCRender.GridMetrics should be called so that the average-NAT-T/avg-NIJ can be calculated.
  	 *@param value the floating point value of the weight
  	 *@param weights the weighting table
  	 */
- 	private double getAdvancedWeight(double value, AdvancedTriplet[] weights){
+ 	private double getAdvancedWeight(double value, AdvancedTriplet[] weights, double multiplier){
+ 		//value = taggedNIJ or 
+ 		//weights[i].low, weights[i].high = fraction of avgNIJ or avgNatT.
  	 	for(int i = 0; i < weights.length; i++){
- 	 		if(value >= weights[i].low && value <= weights[i].high){
+ 	 		if(value >= (weights[i].low*multiplier) && value <= (weights[i].high*multiplier)){
  	 			return weights[i].weight;
  	 		}
  	 	}
@@ -306,7 +316,7 @@
  				for(int j = 0; j < nHem[i].length; j++){
  					if(CWT[i][j] != null){
  						for(int k = 0; k < CWT[i][j].length; k++){
- 							CWT[i][j][k] = this.getAdvancedWeight(nHem[i][j].taggedPop(), weights)*CWT[i][j][k];
+ 							CWT[i][j][k] = this.getAdvancedWeight(nHem[i][j].taggedPop(), weights, this.avgTaggedNIJ[k])*CWT[i][j][k];
  						}
  					}
  				}
@@ -319,7 +329,7 @@
  				for(int j = 0; j < nHem[i].length; j++){
  					if(finalCWT[i][j] != null){
  						for(int k = 0; k < finalCWT[i][j].length; k++){
- 							finalCWT[i][j][k] = this.getAdvancedWeight(nHem[i][j].taggedPop(), weights)*finalCWT[i][j][k];
+ 							finalCWT[i][j][k] = this.getAdvancedWeight(nHem[i][j].taggedPop(), weights, this.avgTaggedNIJ[k])*finalCWT[i][j][k];
  						}
  					}
  				}
@@ -332,7 +342,7 @@
  				for(int j = 0; j < nHem[i].length; j++){
  					if(QTBA[i][j] != null){
  						for(int k = 0; k < QTBA[i][j].length; k++){
- 							QTBA[i][j][k] = this.getAdvancedWeight(nHem[i][j].gridNatT[k], weights)*QTBA[i][j][k];
+ 							QTBA[i][j][k] = this.getAdvancedWeight(nHem[i][j].gridNatT[k], weights, this.avgNatT[k])*QTBA[i][j][k];
  						}
  					}
  				}
@@ -716,6 +726,7 @@
  	  *@param varList the list of correlated variables 
  	  */
  	 public ArrayList<String> avgGridNatT(String varList[]){
+ 	 	this.avgNatT = new double[varList.length];
  	 	
  	 	ArrayList<String> output = new ArrayList<String>();
  	 	
@@ -737,7 +748,7 @@
  	 		}
  	 		
  	 		output.add(varList[k] + "\t\t" + (sumQTBAk/noTagged));
- 	 		
+ 	 		this.avgNatT[k] = (sumQTBAk/noTagged);
  	 	}
  	 	
  	 	output.add("------------------------------");
@@ -751,6 +762,7 @@
  	  *@param varList the list of correlated variables 
  	  */
  	 public ArrayList<String> avgTaggedNIJ(String varList[]){
+ 	 	this.avgTaggedNIJ = new double[varList.length];
  	 	ArrayList<String> output = new ArrayList<String>();
  	 	
  	 	output.add("POLLUTANT\t\tAVERAGE NIJ");
@@ -769,6 +781,7 @@
  	 		}
  	 		
  	 		output.add(varList[k] + "\t\t" + (sumAvgNIJ/noTagged));	
+ 	 		this.avgTaggedNIJ[k] = (sumAvgNIJ/noTagged);
  	 	}
  	 	
  	 	output.add("------------------------------");
