@@ -736,6 +736,7 @@ public class CMCRender {
     	}
     	
     	//nh.printCWTMatrix(0); //VERBOSE TESTING
+    	this.GridMetrics(1);
     	
     	if(weights != null){
     		nh.applyAdvancedWeight("CWT", weights);
@@ -768,6 +769,8 @@ public class CMCRender {
     	if(varList == null) return; //aka the CD-file has not been read yet
     	nh.calcRTWC(this.varList, optionSelect, convPercent, maxIterations, pointFilter, polyDegree, confInt, ndValue, this.outputDir);
     	
+    	this.GridMetrics(1);
+    	
     	if(weights != null){
     		nh.applyAdvancedWeight("RTWC", weights);
     	}
@@ -780,12 +783,13 @@ public class CMCRender {
      *@param a atmospheric dispersion velocity (km/hr)
      *@param weights triplet array for application of weights; can be null
      */
-     public void calcQTBA(double a, AdvancedTriplet[] weights){
+     public void calcQTBA(double a, AdvancedTriplet[] weights) throws IOException{
      	if(varList == null) return; //aka the CD-file has not been read yet
      //	System.out.println("ReceptorMax = " + this.receptorMax); VERBOSE
      	nh.calcQTBA(this.varList, a, this.receptorMax);
      	
      	//nh.printQTBAMatrix(0);
+     	this.GridMetrics(2);
      	
      	if(weights != null){
      		nh.applyAdvancedWeight("QTBA", weights);
