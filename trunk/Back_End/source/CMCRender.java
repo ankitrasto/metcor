@@ -637,15 +637,19 @@ public class CMCRender {
     	//METHOD 3: percentile cutoff.
     	//METHOD 4: already in file (default, any value!)
     	//percentile: enter zero if it method 3 is not used.
-
+		int auxRecMax = 1;
+		
+		if(this.containsReceptorMax){
+			auxRecMax = this.receptorMax;
+		}
     	nh.changeWeights(weights);
-
+		
     	double sum = 0;
     	if(containsThresh){
     		if(useSourceIDs){
-  				nh.calcPSCFBySourceID(this.threshData);
+  				nh.calcPSCFBySourceID(this.threshData, auxRecMax);
   			}else{
-  				nh.calcPSCF(this.threshData);
+  				nh.calcPSCF(this.threshData, auxRecMax);
   			}
     	}else{
     		if(threshMethod <= 1 || threshMethod > 3){
@@ -688,9 +692,9 @@ public class CMCRender {
   			}
 
   			if(useSourceIDs){
-  				nh.calcPSCFBySourceID(this.threshData);
+  				nh.calcPSCFBySourceID(this.threshData, auxRecMax);
   			}else{
-  				nh.calcPSCF(this.threshData);
+  				nh.calcPSCF(this.threshData, auxRecMax);
   			}
     	}
     }

@@ -356,7 +356,13 @@
  	 *Computes PSCF values for points in the World with correlated data.
  	 *@param threshDataW the threshold data as a Pair of values
  	 */
- 	public void calcPSCF(Pair[] threshDataW) throws Exception{
+ 	public void calcPSCF(Pair[] threshDataW, int recMax) throws Exception{
+ 		
+ 		if(recMax > worldRecs.size()){
+ 			System.out.println("RECEPTORMAX is greater than the number of receptors in analysis. Using RECEPTORMAX = " + this.worldRecs.size());
+ 			recMax = worldRecs.size(); //CHECK
+ 		}
+ 		
  		if(threshDataW == null || threshDataW.length == 0) return;
  		for(int i = 0; i < nHem.length; i++){
  			for(int j = 0; j < nHem[i].length; j++){
@@ -365,10 +371,14 @@
  				//Grids containing points which have NO correlated data have a NULL PSCF value and are treated the same as empty grids; therefore, mij = null and PSCF = null
  				if(nHem[i][j].mij != null && threshDataW.length == nHem[i][j].mij.length){
  					PSCF[i][j] = new double[threshDataW.length];
-					nHem[i][j].calcMIJ(threshDataW);
+					nHem[i][j].calcMIJ(threshDataW, recMax);
+					
 					for(int k = 0; k < PSCF[i][j].length; k++){
 						int popTemp = nHem[i][j].taggedPop();
-						PSCF[i][j][k] = getWeight(popTemp)*(((nHem[i][j]).mij[k])/((Integer)popTemp).doubleValue());
+						int popTempMulti = nHem[i][j].multiPopForPSCF(recMax);
+						if(nHem[i][j].mij != null && popTempMulti >= 0){
+							PSCF[i][j][k] = getWeight(popTemp)*(((nHem[i][j]).mij[k])/((Integer)popTempMulti).doubleValue());
+						}
 					}
  				}	
  			}
@@ -789,7 +799,13 @@
  	 	return output;
  	 }
  	
- 	 public void calcPSCFBySourceID(Pair[] threshDataW) throws Exception{
+ 	 public void calcPSCFBySourceID(Pair[] threshDataW, int recMax) throws Exception{
+ 	 	
+ 	 	if(recMax > worldRecs.size()){
+ 	 		System.out.println("RECEPTORMAX is greater than the number of receptors in analysis. Using RECEPTORMAX = " + this.worldRecs.size());
+ 			recMax = worldRecs.size(); //CHECK
+ 	 	}
+ 	 	
  		if(threshDataW == null || threshDataW.length == 0) return;
  		for(int i = 0; i < nHem.length; i++){
  			for(int j = 0; j < nHem[i].length; j++){
@@ -798,12 +814,30 @@
  				//Grids containing points which have NO correlated data have a NULL PSCF value and are treated the same as empty grids; therefore, mij = null and PSCF = null
  				if(nHem[i][j].mij != null && threshDataW.length == nHem[i][j].mij.length){
  					PSCF[i][j] = new double[threshDataW.length];
-					nHem[i][j].calcMIJ(threshDataW);
+					nHem[i][j].calcMIJ(threshDataW, recMax);
+					
 					for(int k = 0; k < PSCF[i][j].length; k++){
 						int popTemp = nHem[i][j].taggedPop();
-						PSCF[i][j][k] = getWeight(nHem[i][j].taggedUniqueID())*(((nHem[i][j]).mij[k])/((Integer)popTemp).doubleValue());
+						int popTempMulti = nHem[i][j].multiPopForPSCF(recMax);
+						if(nHem[i][j].mij != null && popTempMulti >= 0){
+							PSCF[i][j][k] = getWeight(nHem[i][j].taggedUniqueID())*(((nHem[i][j]).mij[k])/((Integer)popTempMulti).doubleValue());
+						}
 					}
- 				}	
+ 				}
+ 				/*if(nHem[i][j].mij != null && threshDataW.length == nHem[i][j].mij.length){
+ 					PSCF[i][j] = new double[threshDataW.length];
+					nHem[i][j].calcMIJ(threshDataW, worldRecs.size());
+					for(int k = 0; k < PSCF[i][j].length; k++){
+						int popTemp = nHem[i][j].taggedPop();
+						if(nHem[i][j].mij == null){
+							PSCF[i][j][k] = -1.00;
+						}else{
+							//multiplicative PSCF should go here
+							PSCF[i][j][k] = getWeight(nHem[i][j].taggedUniqueID())*(((nHem[i][j]).mij[k])/((Integer)popTemp).doubleValue());
+						}
+						
+					}
+ 				}*/	
  			}
  		}
  	}

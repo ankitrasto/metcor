@@ -161,17 +161,56 @@
 	 *@param threshData the set of threshold data in the same order as the indices of the mij array.
 	 *@throws Exception occurs if a name sought after in correlated data sets is not found
 	 */
-  	public void calcMIJ(Pair[] threshData) throws Exception{ //threshold data as a pair.
+  	public void calcMIJ(Pair[] threshData, int receptorMax) throws Exception{ //threshold data as a pair.  	
+		
+		if(receptorMax > this.numReceptors()){
+			mij = null; //nullify an array to give a no-data value
+		} 
+		
 		if(mij != null && threshData.length == mij.length){
 			for(int i = 0; i < mij.length; i++){
-				mij[i] =  0; //initially set mij to zero.
-				for(int j = 0; j < points.size(); j++){
-					if(((Point)points.get(j)).hasData() && threshData[i].value <= ((Point)points.get(j)).getValue(threshData[i].name)){
-						mij[i]++;
+				mij[i] =  1; //initially set mij to one (multiplier effect).
+				Iterator itrReceptors = this.receptors.iterator();
+				int auxMIJ[] = new int[this.numReceptors()];
+			
+				//iterate through all receptors here and multiply the MIJ finding
+				for(int r = 0; r < this.numReceptors(); r++){
+					String receptor = (String)itrReceptors.next();
+					for(int j = 0; j < points.size(); j++){
+						if(((Point)points.get(j)).hasData() && threshData[i].value <= ((Point)points.get(j)).getValue(threshData[i].name)){
+							String auxThirdDim[] = ((Point)points.get(j)).thirdDim().split(",");
+							if(auxThirdDim[1].equalsIgnoreCase(receptor.split(",")[0]) && auxThirdDim[2].equalsIgnoreCase(receptor.split(",")[1])){
+								auxMIJ[r]++;	
+							}
+						}
 					}
-				}
+					
+					//multiply the MIJ finding:
+					mij[i] *= auxMIJ[r];	
+				}		
 			}
-		}
+		} //mij(!= null)
+  	}
+  	
+  	public int multiPopForPSCF(int receptorMax){
+  		if(this.numReceptors() < receptorMax) return -1;
+  		
+  		Iterator itrReceptors = this.receptors.iterator();
+  		int NIJMulti = 1;
+  		while(itrReceptors.hasNext()){
+  			int nijRec = 0;
+  			String receptor = (String)(itrReceptors.next());
+  			
+  			for(int j = 0; j < points.size(); j++){
+  				Point auxP = (Point)(points.get(j));
+  				if(auxP.hasData() && thirdDimLat(auxP.thirdDim()).equalsIgnoreCase(receptor.split(",")[0]) && thirdDimLon(auxP.thirdDim()).equalsIgnoreCase(receptor.split(",")[1])){
+  					nijRec++;
+  				}
+  			}
+  			
+  			NIJMulti *= nijRec;
+  		}
+  		return NIJMulti;
   	}
   	
   	/**
