@@ -158,7 +158,17 @@ public class CMCRender {
     private String timeCorrect(String auxDate, boolean correctDST, int zoneOffset){ //auxDate does not have a zero indexed month!
 		//zoneOffset in hours (-8 for PST, example!), correctDST = true if DST applies
     	//date format: yyyymmddtt, yyyymddtt, yyyymmd
-    	GregorianCalendar backDate = new GregorianCalendar(Integer.parseInt(auxDate.substring(0,4)), Integer.parseInt(auxDate.substring(4,6))-1, Integer.parseInt(auxDate.substring(6,8)), Integer.parseInt(auxDate.substring(8,10)), 0);
+       	GregorianCalendar backDate;
+       
+       	if(!correctDST){
+       		backDate = new GregorianCalendar(new SimpleTimeZone(0, "noDST"));
+       		backDate.set(Integer.parseInt(auxDate.substring(0,4)), Integer.parseInt(auxDate.substring(4,6))-1, Integer.parseInt(auxDate.substring(6,8)), Integer.parseInt(auxDate.substring(8,10)), 0);
+       	}else{
+       		backDate = new GregorianCalendar(Integer.parseInt(auxDate.substring(0,4)), Integer.parseInt(auxDate.substring(4,6))-1, Integer.parseInt(auxDate.substring(6,8)), Integer.parseInt(auxDate.substring(8,10)), 0);
+       	}
+       	
+       	//System.out.println("Date Passed:"  + backDate.get(Calendar.YEAR) + df.format(backDate.get(Calendar.MONTH) + 1) + df.format(backDate.get(Calendar.DAY_OF_MONTH)) + df.format(backDate.get(Calendar.HOUR_OF_DAY)));
+    	
     	backDate.add(Calendar.HOUR_OF_DAY, (-1*zoneOffset));
     	String corrected = backDate.get(Calendar.YEAR) + df.format(backDate.get(Calendar.MONTH) + 1) + df.format(backDate.get(Calendar.DAY_OF_MONTH)) + df.format(backDate.get(Calendar.HOUR_OF_DAY));
     	return corrected;
@@ -393,9 +403,10 @@ public class CMCRender {
      *@param incr the temporal interval between back trajectories, in hours. REQUIRES: 24%incr = 0. (the increment evenly divides 24 hours of the day
      *so that there are a regular number of back trajectories per day.)
      *@param zone the time zone correction to make to the correlated data input file relative to the time zone of the back trajectories.
+     *@param correctDST specifies whether or not to take into account daylight savings time when making time zone corrections (false = no correction)
      *@param progress A graphical progress bar object may be passed; pass a null object if not needed
      */
-    public void readConc(double incr, int zone, javax.swing.JProgressBar progress) throws Exception{
+    public void readConc(double incr, int zone, boolean correctDST, javax.swing.JProgressBar progress) throws Exception{
     	int numLines = checkInputFile();
     	if(numLines == 0){
     		throw new Exception("Error in Input File. Ensure that it is formatted correctly.");
@@ -460,7 +471,7 @@ public class CMCRender {
     			}
     			
     			//time-correct and tag the appropriate files...call another method in this class for it
-    			tagPointsHS(timeCorrect(startDate, false, zone), timeCorrect(endDate, false, zone), incr, concData, progress, lineHold[4], lineHold[5]);
+    			tagPointsHS(timeCorrect(startDate, correctDST, zone), timeCorrect(endDate, correctDST, zone), incr, concData, progress, lineHold[4], lineHold[5]);
     		}
     		dataHold = bR.readLine();
     	}
@@ -591,8 +602,9 @@ public class CMCRender {
      
 
 
-  	private String increment(String date){
-  		GregorianCalendar sDate = new GregorianCalendar(Integer.parseInt(date.substring(0,4)), Integer.parseInt(date.substring(4,6))-1, Integer.parseInt(date.substring(6,8)), Integer.parseInt(date.substring(8,10)), 0);
+  	private String increment(String date){ //guarantees an increment of every 1hr --> no DST in this case.
+  		GregorianCalendar sDate = new GregorianCalendar(new SimpleTimeZone(0, "noDST"));
+  		sDate.set(Integer.parseInt(date.substring(0,4)), Integer.parseInt(date.substring(4,6))-1, Integer.parseInt(date.substring(6,8)), Integer.parseInt(date.substring(8,10)), 0);
 		sDate.add(Calendar.HOUR_OF_DAY, 1);
 		return sDate.get(Calendar.YEAR) + df.format(sDate.get(Calendar.MONTH) + 1) + df.format(sDate.get(Calendar.DAY_OF_MONTH)) + df.format(sDate.get(Calendar.HOUR_OF_DAY));
   	}
@@ -962,7 +974,7 @@ public class CMCRender {
 		tester.readHSEP(2000, null);
 		System.out.print("....Done");
 
-		tester.readConc(6, 0, null);
+		tester.readConc(6, 0, true, null);
 
 		System.out.print("Printing PSCF matrices...");
 		tester.calcPSCF(2, 0.75, wFac, true);
