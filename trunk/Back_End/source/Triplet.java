@@ -3,8 +3,7 @@
  *Started: May 20, 2010
  **/
 
-/*
- * Copyright [2013] [Ankit Rastogi]
+/* Copyright [2013] [Ankit Rastogi]
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -24,7 +23,7 @@ package dnimp;
 import java.text.*;
 
 /**
- *A modifiable convenience data structure holding two integers and one floating point variable. Used exclusively for specifying weighting factors
+ *A modifiable convenience data structure holding two floating point variables and one floating point variable. Used exclusively for specifying weighting factors
  *for the PSCF function. To be semantically useful, low should be less than or equal to high.
  *@author Ankit Rastogi
  */
@@ -32,12 +31,12 @@ public class Triplet{
 	/**
 	 *"Low" Integer Value of this Triplet.
 	 */
-	public int low;
+	public double low;
 	
 	/**
 	 *"High" Integer Value of this Triplet.
 	 */
-	public int high;
+	public double high;
 	
 	/**
 	 *The floating point value associated with this Triplet.
@@ -47,7 +46,7 @@ public class Triplet{
 	/**
 	 *Creates a new instance of a triplet structure with two integers and an associated weight.
 	 */
-	public Triplet(int low, int high, double weight){
+	public Triplet(double low, double high, double weight){
 		this.low = low;
 		this.high = high;
 		this.weight = weight;

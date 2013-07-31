@@ -650,6 +650,7 @@ public class CMCRender {
     	//METHOD 4: already in file (default, any value!)
     	//percentile: enter zero if it method 3 is not used.
 		int auxRecMax = 1;
+		this.GridMetrics(1); //NOTE, TAGGING *MUST* BE DONE BEFORE THIS IS CALLED!!
 		
 		if(this.containsReceptorMax){
 			auxRecMax = this.receptorMax;
