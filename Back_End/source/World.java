@@ -271,11 +271,17 @@
  	 *Returns the weight for the PSCF function. If no weight is found or specified, a default weight of 1 is returned.
  	 *@param nij the population of the points in a specific grid, used to determine the appropriate weighting function to return.
  	 */
- 	private double getWeight(int nij){
+ 	private double getWeight(int nij, int polIndex, boolean sourceID){
  		for(int i = 0; i < PSCFWeights.length; i++){
- 			if(nij <= PSCFWeights[i].high && nij >= PSCFWeights[i].low){
- 				return PSCFWeights[i].weight;
- 			}
+ 			if(sourceID){
+ 				if(nij <= PSCFWeights[i].high && nij >= PSCFWeights[i].low){
+ 					return PSCFWeights[i].weight;
+ 				}
+ 			}else{
+ 				if(nij <= (PSCFWeights[i].high*this.avgTaggedNIJ[polIndex]) && nij >= (PSCFWeights[i].low*this.avgTaggedNIJ[polIndex])){
+ 					return PSCFWeights[i].weight;
+ 				}
+ 			}	
  		}
  		return 1;
  	}
@@ -377,7 +383,7 @@
 						int popTemp = nHem[i][j].taggedPop();
 						int popTempMulti = nHem[i][j].multiPopForPSCF(recMax);
 						if(nHem[i][j].mij != null && popTempMulti >= 0){
-							PSCF[i][j][k] = getWeight(popTemp)*(((nHem[i][j]).mij[k])/((Integer)popTempMulti).doubleValue());
+							PSCF[i][j][k] = getWeight(popTemp, k, false)*(((nHem[i][j]).mij[k])/((Integer)popTempMulti).doubleValue());
 						}
 					}
  				}	
@@ -820,7 +826,7 @@
 						int popTemp = nHem[i][j].taggedPop();
 						int popTempMulti = nHem[i][j].multiPopForPSCF(recMax);
 						if(nHem[i][j].mij != null && popTempMulti >= 0){
-							PSCF[i][j][k] = getWeight(nHem[i][j].taggedUniqueID())*(((nHem[i][j]).mij[k])/((Integer)popTempMulti).doubleValue());
+							PSCF[i][j][k] = getWeight(nHem[i][j].taggedUniqueID(), 0, true)*(((nHem[i][j]).mij[k])/((Integer)popTempMulti).doubleValue());
 						}
 					}
  				}
