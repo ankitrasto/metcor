@@ -3,6 +3,29 @@
 
 This page is an archive of informal release notes for every Jar-file of the back-end and GUI that has been released, starting from Rev. 15.
 
+*[http://code.google.com/p/metcor/downloads/detail?name=MetCor_v1r25.zip Rev. 25, Version 1.0]*
+ * added an option for QTBA to determine averaging criteria for multisite analysis:
+
+The final QTBA value for _multisite_ analyses is determined by averaging QTBA values obtained for a given receptor site in a grid. By default, the minimum number of receptor sites required is N = 2. However, N can be user-controlled to a different value by including the following optional line at the end of the correlated data file:
+
+{{{
+RECEPTORMAX     N
+}}}
+*RECEPTORMAX and N must be separated by a tab!*
+Where N is a strictly positive (>=2) integer value representing the minimum number of receptor sites required in a grid, with a QTBA value not -1, to be averaged. Therefore, for a multisite calculation with in a grid cell (i,j) with R receptors and a  "RECEPTORMAX" value of N. 
+
+{{{
+QTBA(i,j) = if R < N, QTBA = -1
+             = if R >= N, QTBA = average(non-negative QTBA values)
+}}}
+
+Note that this implementation change or definition has no effect or bearing on single site calculation outcomes.
+
+*[http://code.google.com/p/metcor/downloads/detail?name=MetCor_v1r23.zip Rev. 23, Version 1.0]*
+ * added a QTBA fix for multisite analysis
+ * added GUI printout fix
+ * this version uses the CWT averaging scheme outlined in Revision 21 
+
 *[http://code.google.com/p/metcor/downloads/detail?name=MetCor_r21v1.zip Rev. 21, Version 1.0] - DEPRECATED FOR QTBA analysis*
  * semantic change in redistributed concentrations method for averaging CWT specifically, which uses a weighted average formula instead of a simple averaging formula(see SVN-diff for more details):
 <img src="http://latex.codecogs.com/gif.latex?CWT_{\rm AVG}(m) = \frac{1}{\sum_{\forall i,j}{N_{ijm}}}\sum_{\forall i,j}N_{ijm}CWT(i,j)_{m}%.png"/>
