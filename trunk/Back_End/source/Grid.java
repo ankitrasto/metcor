@@ -226,7 +226,7 @@
   		return auxIds.size();
   	}
   	
-  	private int numReceptors(){
+  	public int numReceptors(){
   		if(this.taggedUniqueID() == 0) return 0;
   		receptors = new HashSet<String>();
   		for(int i = 0; i < points.size(); i++){
