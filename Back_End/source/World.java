@@ -357,6 +357,27 @@
  		
  	}
  	
+ 	private int getMaxTaggedRec(){
+ 		int maxTaggedRec = 0;
+ 		for(int i = 0; i < nHem.length; i++){
+ 			for(int j = 0; j < nHem[i].length; j++){
+ 				
+ 				if(worldRecs.size() == nHem[i][j].numReceptors()){
+ 					maxTaggedRec = worldRecs.size();
+ 					System.out.println("\nNumber of TAGGED Receptors = " + maxTaggedRec);
+ 					return worldRecs.size();
+ 				}
+ 				
+ 				if(maxTaggedRec < nHem[i][j].numReceptors()){
+ 					maxTaggedRec = nHem[i][j].numReceptors();
+ 				}
+ 			}
+ 		}
+ 		
+ 		System.out.println("\nNumber of TAGGED Receptors = " + maxTaggedRec);
+ 		return maxTaggedRec;
+ 	}
+ 	
  	
  	/**
  	 *Computes PSCF values for points in the World with correlated data.
@@ -364,10 +385,12 @@
  	 */
  	public void calcPSCF(Pair[] threshDataW, int recMax) throws Exception{
  		
- 		if(recMax > worldRecs.size()){
- 			System.out.println("RECEPTORMAX is greater than the number of receptors in analysis. Using RECEPTORMAX = " + this.worldRecs.size());
- 			recMax = worldRecs.size(); //CHECK
- 		}
+ 		int taggedWorldRecs = this.getMaxTaggedRec();
+ 	 	
+ 	 	if(recMax > taggedWorldRecs){
+ 	 		System.out.println("RECEPTORMAX is greater than the number of TAGGED receptors in analysis. Using RECEPTORMAX = " + this.worldRecs.size());
+ 			recMax = taggedWorldRecs; //CHECK
+ 	 	}
  		
  		if(threshDataW == null || threshDataW.length == 0) return;
  		for(int i = 0; i < nHem.length; i++){
@@ -718,13 +741,14 @@
  	 *@param a the atmospheric dispersion velocity (see the MetCor implementation note on QTBA); provide value in km/hr.
  	 */
  	 public void calcQTBA(String varList[], double a, int maxReceptor){
+ 	 	int maxTaggedRec = this.getMaxTaggedRec();
  	 	for(int i = 0; i < nHem.length; i++){
  	 		for(int j = 0; j < nHem[i].length; j++){
  	 			if(nHem[i][j].taggedPop() > 0){
  	 				QTBA[i][j] = new double[varList.length];
  	 				for(int k = 0; k < varList.length; k++){
  	 					try{
- 	 						QTBA[i][j][k] = nHem[i][j].getQTBA(varList[k], a, k, this.worldRecs.size(), maxReceptor);
+ 	 						QTBA[i][j][k] = nHem[i][j].getQTBA(varList[k], a, k, maxTaggedRec, maxReceptor);
  	 					}catch(Exception e){
  	 						e.printStackTrace();
  	 						QTBA[i][j][k] = 0;
@@ -807,9 +831,11 @@
  	
  	 public void calcPSCFBySourceID(Pair[] threshDataW, int recMax) throws Exception{
  	 	
- 	 	if(recMax > worldRecs.size()){
- 	 		System.out.println("RECEPTORMAX is greater than the number of receptors in analysis. Using RECEPTORMAX = " + this.worldRecs.size());
- 			recMax = worldRecs.size(); //CHECK
+ 	 	int taggedWorldRecs = this.getMaxTaggedRec();
+ 	 	
+ 	 	if(recMax > taggedWorldRecs){
+ 	 		System.out.println("RECEPTORMAX is greater than the number of TAGGED receptors in analysis. Using RECEPTORMAX = " + this.worldRecs.size());
+ 			recMax = taggedWorldRecs; //CHECK
  	 	}
  	 	
  		if(threshDataW == null || threshDataW.length == 0) return;
