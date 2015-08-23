@@ -1,0 +1,16 @@
+#Instructions for running MetCor as a jar-file from the command-line
+
+This document is relevant to users who wish to run MetCor strictly as a Jar-file which was downloaded as a .zip folder from the Downloads section, or checked out in the "Builds and Releases" folder in the svn repository.
+
+# Command Line Arguments #
+
+Set the heap space memory to >1000MB for large calculations (grid sizes greater than 5 deg. x 5 deg. and/or greater than 100,000 endpoints involved).
+
+JRE7/JDK1.7 or later must be used for running the software.
+
+examples:
+```
+java -jar DensityNorth.jar -Xmx1300m
+```
+
+where "java" can also be defined by the path to your favourite JRE.
