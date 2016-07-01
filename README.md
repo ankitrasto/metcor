@@ -42,7 +42,7 @@ I programmed MetCor in two parts: the console-based modular back-end handles fil
 
 ## Publications and Software using/modifying MetCor ##
 _Feel free to shoot me an email with a citation of your work so I can add you to the list_
-
+  1. 2. Perišić, M., Rajšić, S., Šoštarić, A., Mijić Z., Stojić A. (2016). Levels of PM10-bound species in Belgrade, Serbia: spatio-temporal distributions and related human health risk estimation. Air Quality, Atmosphere & Health. doi:10.1007/s11869-016-0411-6.
   1. Sofowote, U.M., Rastogi, A.K., Debosz, J., Hopke, P.K., 2014. Advanced receptor modeling of near-real-time, ambient PM2.5 and Its associated components collected at an urban-industrial site in Toronto, Ontario. Atmospheric Pollution Research 5, 13-23, doi: 10.5094/APR.2014.003.
   1. Venier, M., Yuning, M., Hites, R.A. (2012). Bromobenzene Flame Retardants in the Great Lakes Atmosphere. Environmental Science and Technology, 46, 8653 - 8660.
   1. Sofowote, U.M., Hung, H., Rastogi, A.K., Westgate, J.N., DeLuca, P.F., Su, Y., McCarry, B.E. (2010). Assessing the Long Range Transport of PAHs to a Sub‐Arctic Site using Positive Matrix Factorization and Potential Source Contribution Function. Atmospheric Environment, 45(4), 967 - 976
